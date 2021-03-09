@@ -11,9 +11,13 @@ print(보스턴.columns)
 print(독립.shape, 종속.shape)
 
 X=tf.keras.layers.Input(shape=[13])
-Y = tf.keras.layers.Dense(1)(X)
+H = tf.keras.layers.Dense(10,activation='swish')(X)
+Y = tf.keras.layers.Dense(1)(H)
 model = tf.keras.models.Model(X,Y)
 model.compile(loss='mse')
+
+#모델에 히든레이어 됬는지 확인용
+model.summary()
 
 model.fit(독립,종속,epochs=10)
 
@@ -22,4 +26,4 @@ model.predict(독립[0:5])
 종속[0:5]
 
 #모델의 수식 확인
-model.get_weights()
+model.get_weights() 

@@ -15,7 +15,10 @@ print(아이리스.columns)
 print(독립.shape,종속.shape)
 
 X = tf.keras.layers.Input(shape=[4])
-Y = tf.keras.layers.Dense(3,activation='softmax')(X)
+H = tf.keras.layers.Dense(8,activation='swish')(X)
+H = tf.keras.layers.Dense(8,activation='swish')(H)
+H = tf.keras.layers.Dense(8,activation='swish')(H)
+Y = tf.keras.layers.Dense(3,activation='softmax')(H)
 model = tf.keras.models.Model(X,Y)
 model.compile(loss='categorical_crossentropy',metrics='accuracy')
 
