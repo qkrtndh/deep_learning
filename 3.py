@@ -11,7 +11,18 @@ print(보스턴.columns)
 print(독립.shape, 종속.shape)
 
 X=tf.keras.layers.Input(shape=[13])
-H = tf.keras.layers.Dense(10,activation='swish')(X)
+H = tf.keras.layers.Dense(10)(X)
+H = tf.keras.layers.Activation('swish')(H)
+H = tf.keras.layers.BatchNormalization()(H)
+
+H = tf.keras.layers.Dense(10)(H)
+H = tf.keras.layers.Activation('swish')(H)
+H = tf.keras.layers.BatchNormalization()(H)
+
+H = tf.keras.layers.Dense(10)(H)
+H = tf.keras.layers.Activation('swish')(H)
+H = tf.keras.layers.BatchNormalization()(H)
+
 Y = tf.keras.layers.Dense(1)(H)
 model = tf.keras.models.Model(X,Y)
 model.compile(loss='mse')
