@@ -1,27 +1,57 @@
 import tensorflow as tf
-#tensorlfow 에서 제공하는 샘플 이미지 다운로드 및 차원? 확인
-(mnist_x,mnist_y), _ = tf.keras.datasets.mnist.load_data()
-print(mnist_x.shape,mnist_y.shape)
+import pandas as pd
 
-(cifar_x,cifar_y), _ = tf.keras.datasets.cifar10.load_data()
-print(cifar_x.shape,cifar_y.shape)
+#reshape 이용
+(독립 ,종속), _ = tf.keras.datasets.mnist.load_data()
+print(독립.shape,종속.shape)
 
-#이미지 확인
-import matplotlib.pyplot as plt
-print(mnist_y[0:10])
-#흑맥이므로 cmap='gray' 명시할것
-plt.imshow(mnist_x[0],cmap='gray')
+#표의 형태로 바꾸는 과정
+독립 = 독립.reshape(60000,784)
+종속 = pd.get_dummies(종속)
+#784열을 가진 독립변수, 10열을 가진 종속변수가 만들어진다
+print(독립.shape,종속.shape)
 
-print(cifar_y[0:10])
-plt.imshow(cifar_x[0])
+#모델 생성
+X = tf.keras.layers.Input(shape=[784])
+H = tf.keras.layers.Dense(84, activation='swish')(X)
+Y = tf.keras.layers.Dense(10, activation='softmax')(H)
+model = tf.keras.models.Model(X,Y)
+model.compile(loss='categorical_crossentropy',metrics='accuracy')
 
-#차원 확인 word 파일에 상세내용
-import numpy as np
-d1 = np.array([1,2,3,4,5])
-print(d1.shape)
-d2 = np.array([d1,d1,d1,d1])
-print(d2.shape)
-d3 = np.array([d2,d2,d2])
-print(d3.shape)
-d4 = np.array([d3,d3])
-print(d4.shape)
+#모델 학습
+model.fit(독립,종속,epochs=10)
+
+#모델 사용, 보기 편하게 출력
+pred = model.predict(독립[0:5])
+pd.DataFrame(pred).round(2)
+
+종속[0:5]#정답 비교
+
+###################################
+
+#flatten 방식
+(독립 ,종속), _ = tf.keras.datasets.mnist.load_data()
+print(독립.shape,종속.shape)
+
+#표의 형태로 바꾸는 과정
+#독립 = 독립.reshape(60000,784)
+종속 = pd.get_dummies(종속)
+#784열을 가진 독립변수, 10열을 가진 종속변수가 만들어진다
+print(독립.shape,종속.shape)
+
+#모델 생성
+X = tf.keras.layers.Input(shape=[28,28])
+H = tf.keras.layers.Flatten()(X)
+H = tf.keras.layers.Dense(84, activation='swish')(H)
+Y = tf.keras.layers.Dense(10, activation='softmax')(H)
+model = tf.keras.models.Model(X,Y)
+model.compile(loss='categorical_crossentropy',metrics='accuracy')
+
+#모델 학습
+model.fit(독립,종속,epochs=10)
+
+#모델 사용, 보기 편하게 출력
+pred = model.predict(독립[0:5])
+pd.DataFrame(pred).round(2)
+
+종속[0:5]#정답 비교
